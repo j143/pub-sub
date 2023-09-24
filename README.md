@@ -26,6 +26,24 @@ This is a simple concurrent in-memory pub-sub system implemented in Go. It allow
    go run main.go pubsub.go
    ```
 
+## Diagram
+
+In this digram
+
+- The "Publisher" sends messages to the "PubSub" system.
+- The "Subscriber" receives messages from the "PubSub" system.
+- The "PubSub" system manages topics and facilitates communication between publishers and subscribers.
+
+```txt
+  +--------------+         +--------------+       +--------------+
+  |   Publisher  | ------> |    PubSub    | <---> |  Subscriber  |
+  +--------------+         +--------------+       +--------------+
+            |                        |
+            |                        |
+            +------------------------+
+```
+
+
 ## How It Works
 
 The `PubSub` struct handles the subscription and publishing of messages. It uses channels for communication between subscribers and the pub-sub system.
