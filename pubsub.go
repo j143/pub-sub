@@ -34,6 +34,7 @@ func (ps *PubSub) Publish(topic string, message string) {
 	defer ps.mu.Unlock()
 
 	subscribers, ok := ps.topics[topic]
+
 	if !ok {
 		return
 	}
@@ -44,3 +45,26 @@ func (ps *PubSub) Publish(topic string, message string) {
 		}(ch)
 	}
 }
+
+
+// Unsubscribe removes a subscriber from a topic.
+func (ps *PubSub) Unsubscribe(topic string, ch chan string) {
+	ps.mu.Lock()
+	defer ps.mu.Unlock()
+
+	subscribers, ok := ps.topics[topic]
+	if !ok {
+		return
+	}
+
+	for i, subscriber := range subscribers {
+		if subscriber == ch {
+			// Remove the subscriber by replacing it with the last subscriber in the slice
+			subscribers[i] = subscribers[len(subscribers)-1]
+			ps.topics[topic] = subscribers[:len(subscribers)-1]
+			close(ch) // Close the channel to prevent memory leaks
+			break
+		}
+	}
+}
+
