@@ -10,6 +10,7 @@ func main() {
 
 	chA := ps.Subscribe("topicA")
 	chB := ps.Subscribe("topicB")
+	chC := ps.Subscribe("topicC") // to test unsubscribe functionality
 
 	go func() {
 		for {
@@ -18,24 +19,25 @@ func main() {
 				fmt.Println("Received on topicA:", msg)
 			case msg := <-chB:
 				fmt.Println("Received on topicB:", msg)
+			case msg := <-chC:
+				fmt.Println("Received on topicC:", msg)
 			}
 		}
 	}()
 
 	ps.Publish("topicA", "Hello, topicA subscribers!")
 	ps.Publish("topicB", "Greetings, topicB subscribers!")
+	ps.Publish("topicC", "Greetings, topicC subscribers!")
 
 	time.Sleep(time.Second)
 
-	// Unsubscribe from topicA
-	// ps.Unsubscribe("topicA", chA)
-
 	ps.ProcessQueue("topicA")
 	ps.ProcessQueue("topicB")
+	ps.ProcessQueue("topicC")
 
 	// Now, let's simulate a new subscribe who missed previous messages
-	newSub := ps.Subscribe("topicA")
-	ps.RetrieveHistory("topicA", newSub)
+	newSub := make(chan string)
+    ps.RetrieveHistory("topicB", newSub)
 	go func() {
 		for {
 			select {
@@ -45,25 +47,12 @@ func main() {
 		}
 	}()
 
+	// Unsubscribe from topicC
+	// ps.Unsubscribe("topicC", chC)
 
 	// Publish a message after unsubscribing
-	// ps.Publish("topicA", "This message won't be received by topicA subscribers")
+	// ps.Publish("topicC", "This message won't be received by topicC subscribers")
 	// panic: send on closed channel
-
-// goroutine 20 [running]:
-// main.(*PubSub).Publish.func1(0x0?)
-//         D:/repo/pub-sub/pubsub.go:44 +0x30
-// created by main.(*PubSub).Publish
-//         D:/repo/pub-sub/pubsub.go:43 +0x105
-// exit status 2
-
-	// Check if the channel is still open before publishing
-	select {
-	case chA <- "This message won't be received by topicA subscribers":
-		fmt.Println("Message sent successfully")
-	default:
-		fmt.Println("Failed to send message to closed channel")
-	}
 
 	time.Sleep(time.Second)
 }

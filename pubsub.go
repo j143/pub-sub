@@ -46,6 +46,12 @@ func (ps *PubSub) Publish(topic string, message string) {
 	for _, ch := range subscribers {
 		go func(ch chan string) {
 			ch <- message
+			// select {
+			// case ch <- message:
+			// default:
+			// 	// If the channel is full or closed, do not block the publisher
+			// 	// Optionally, you can handle this case (e.g., log a message)
+			// }
 		}(ch)
 	}
 }

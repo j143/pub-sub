@@ -95,11 +95,12 @@ Certainly! Adding complexity to the existing code can make it more robust and ve
 
 - [ ] 3. **Non-Blocking Publish**:
    - Implement a non-blocking version of the `Publish` function that sends messages without blocking the publisher.
+     a non-blocking publish functionality involves making sure that publishing a message won't block the publisher, even if there are no subscribers.
 
 - [x] 4. **Message Queues**:
    - Introduce a message queue system that can handle a backlog of messages and ensure they are delivered to subscribers even if they're not actively listening.
 
-- [ ] 5. **Message Persistence**:
+- [x] 5. **Message Persistence**:
    - Add a feature to persist messages so that subscribers can retrieve missed messages when they subscribe to a topic.
 
 - [ ] 6. **Wildcard Subscriptions**:
