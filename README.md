@@ -96,7 +96,7 @@ Certainly! Adding complexity to the existing code can make it more robust and ve
 - [ ] 3. **Non-Blocking Publish**:
    - Implement a non-blocking version of the `Publish` function that sends messages without blocking the publisher.
 
-- [ ] 4. **Message Queues**:
+- [x] 4. **Message Queues**:
    - Introduce a message queue system that can handle a backlog of messages and ensure they are delivered to subscribers even if they're not actively listening.
 
 - [ ] 5. **Message Persistence**:
@@ -221,3 +221,13 @@ That's a concise explanation of the architecture of your pub-sub system. You've 
 
 Your system follows a simple but effective design, where subscribers receive messages through channels and access to critical sections (like modifying the `topics` map) is protected by the mutex.
 
+---
+
+Asking the AI chat, 8th October 2023
+
+Me:
+Hi, Let's continue our discussion here with:
+
+let's add the message queue functionality to our pub-sub system implemented so far.
+
+ChatGPT provided the code for message functionality.

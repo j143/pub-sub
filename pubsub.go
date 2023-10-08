@@ -9,6 +9,7 @@ type PubSub struct {
 	mu      sync.Mutex
 	topics  map[string][]chan string
 	queues  map[string][]string //keys are topic names, values are slices of strings
+	history map[string][]string
 }
 
 // NewPubSub creates a new PubSub instance.
@@ -38,6 +39,7 @@ func (ps *PubSub) Publish(topic string, message string) {
 
 	if !ok {
 		ps.EnqueueMessage(topic, message)
+		ps.PersistMessage(topic, message)
 		return
 	}
 
@@ -97,4 +99,29 @@ func (ps *PubSub) ProcessQueue(topic string) {
 	}
 
 	delete(ps.queues, topic)
+}
+
+func (ps *PubSub) PersistMessage(topic string, message string) {
+	ps.mu.Lock()
+	defer ps.mu.Unlock()
+
+	if _, ok := ps.history[topic]; !ok {
+		ps.history[topic] = []string{message}
+	} else {
+		ps.history[topic] = append(ps.history[topic], message)
+	}
+}
+
+func (ps *PubSub) RetrieveHistory(topic string, ch chan string) {
+	ps.mu.Lock()
+	defer ps.mu.Unlock()
+
+	history, ok := ps.history[topic]
+	if !ok {
+		return
+	}
+
+	for _, message := range history {
+		ch <- message
+	}
 }

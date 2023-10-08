@@ -33,6 +33,19 @@ func main() {
 	ps.ProcessQueue("topicA")
 	ps.ProcessQueue("topicB")
 
+	// Now, let's simulate a new subscribe who missed previous messages
+	newSub := ps.Subscribe("topicA")
+	ps.RetrieveHistory("topicA", newSub)
+	go func() {
+		for {
+			select {
+			case msg := <-newSub:
+				fmt.Println("Received messages from history: ", msg)
+			}
+		}
+	}()
+
+
 	// Publish a message after unsubscribing
 	// ps.Publish("topicA", "This message won't be received by topicA subscribers")
 	// panic: send on closed channel
