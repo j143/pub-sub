@@ -30,6 +30,9 @@ func main() {
 	// Unsubscribe from topicA
 	// ps.Unsubscribe("topicA", chA)
 
+	ps.ProcessQueue("topicA")
+	ps.ProcessQueue("topicB")
+
 	// Publish a message after unsubscribing
 	// ps.Publish("topicA", "This message won't be received by topicA subscribers")
 	// panic: send on closed channel
