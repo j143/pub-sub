@@ -28,7 +28,7 @@ func main() {
 	time.Sleep(time.Second)
 
 	// Unsubscribe from topicA
-	ps.Unsubscribe("topicA", chA)
+	// ps.Unsubscribe("topicA", chA)
 
 	// Publish a message after unsubscribing
 	// ps.Publish("topicA", "This message won't be received by topicA subscribers")
